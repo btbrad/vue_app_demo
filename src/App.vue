@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-01 21:11:52
- * @LastEditTime: 2019-04-07 16:32:59
+ * @LastEditTime: 2019-04-12 15:24:05
  -->
 <template>
     <div id="app">
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 const FooterGuide = () => import('./components/FooterGuide/FooterGuide.vue')
 export default {
   name: 'App',
@@ -23,6 +24,12 @@ export default {
     return {
 
     }
+  },
+  methods: {
+    ...mapActions(['getAddress'])
+  },
+  mounted () {
+    this.getAddress()
   }
 }
 </script>

@@ -3,48 +3,52 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-07 15:44:16
- * @LastEditTime: 2019-04-07 16:27:09
+ * @LastEditTime: 2019-04-13 23:44:25
  -->
 <template>
   <section class="loginContainer">
     <div class="loginInner">
       <div class="login_header">
-        <h2 class="login_logo">硅谷外卖</h2>
+        <h2 class="login_logo">VUE外卖</h2>
         <div class="login_header_title">
-          <a href="javascript:;" class="on">短信登录</a>
-          <a href="javascript:;">密码登录</a>
+          <a href="javascript:;" :class="{on:loginType}" @click="changeLoginType(true)">短信登录</a>
+          <a href="javascript:;" :class="{on:!loginType}" @click="changeLoginType(false)">密码登录</a>
         </div>
       </div>
       <div class="login_content">
-        <form>
-          <div class="on">
+        <form @submit.prevent="login">
+          <div :class="{on:loginType}">
             <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号">
-              <button disabled="disabled" class="get_verification">获取验证码</button>
+              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
+              <button :class="{correct_phone:correct_num}" :disabled="!correct_num" class="get_verification" @click.prevent="getVerification">
+                {{leftTime ? `已发送(${leftTime}s)` : '获取验证码' }}
+              </button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码">
+              <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
               <a href="javascript:;">《用户服务协议》</a>
             </section>
           </div>
-          <div>
+          <div :class="{on:!loginType}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                <input type="text" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="密码">
-                <div class="switch_button off">
+                <input v-if="showPwd" type="text" maxlength="8" placeholder="密码" v-model="pwd">
+                <input v-else type="password" maxlength="8" placeholder="密码" v-model="pwd">
+                <div class="switch_button off" :class="{on:showPwd,off:!showPwd}" @click="switchPasswordVisibility">
                   <div class="switch_circle"></div>
-                  <span class="switch_text">...</span>
+                  <span class="switch_text">{{showPwd?'abc':'...'}}</span>
                 </div>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"
+                 @click="getCaptcha" ref="captcha">
               </section>
             </section>
           </div>
@@ -56,12 +60,151 @@
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
+    <AlertTip v-show="showAlert" :alertText="alertText" @closeTip="handleClose"></AlertTip>
   </section>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import AlertTip from '../../components/AlertTip/AlertTip'
+import { reqCode, reqLoginSMS, reqLoginPwd } from '../../api/index'
+
 export default {
-  name: 'Login'
+  name: 'Login',
+  components: {
+    AlertTip
+  },
+  data () {
+    return {
+      loginType: true, // true: 短信 false: 密码
+      leftTime: 0, // 倒计时
+      showPwd: false, // 是否显示密码
+      phone: '', // 手机号码
+      pwd: '123456', // 密码
+      code: '', // 短信验证码
+      name: 'btbt', // 用户名
+      captcha: '', // 图形验证码
+      alertText: '', // 提示文本内容
+      showAlert: false // 提示框是否显示
+    }
+  },
+  computed: {
+    correct_num () {
+      const {phone} = this
+      return /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(+phone)
+    }
+  },
+  methods: {
+    ...mapActions(['saveUserInfo']),
+    // 切换登录方式
+    changeLoginType (flag) {
+      this.loginType = flag
+    },
+    // 获取手机验证码
+    async getVerification () {
+      if (!this.leftTime) {
+        this.leftTime = 30
+        // this.correct_num = false
+        this.timer = setInterval(() => {
+          this.leftTime--
+          if (this.leftTime <= 0) {
+            clearInterval(this.timer)
+          }
+        }, 1000)
+
+        // 发送ajax请求(向指定手机号发送验证码短信)
+        const result = await reqCode(this.phone)
+        console.log(result)
+        if (result.code === 1) {
+          console.log(111)
+          this.handleShowAlert(result.msg)
+          if (this.leftTime > 0) {
+            this.leftTime = 0
+            clearInterval(this.timer)
+          }
+        } else if (result.code === 0) {
+          this.handleShowAlert('验证码已发送,请查看手机')
+        }
+      }
+    },
+    // 切换密码显示与隐藏
+    switchPasswordVisibility () {
+      this.showPwd = !this.showPwd
+    },
+    // 登录
+    async login () {
+      let result
+      if (this.loginType) {
+        // 短信登录
+        const {correct_num: correctNum, phone, code} = this
+        if (!correctNum) {
+          // 手机号格式不正确
+          this.handleShowAlert('手机号格式不正确')
+          return false
+        } else if (!/^\d{6}$/.test(code)) {
+          // 验证码格式不正确(6位数字)
+          this.handleShowAlert('验证码格式不正确')
+          return false
+        }
+        // 发送ajax请求短信登录
+        result = await reqLoginSMS(phone, code)
+      } else {
+        // 密码登录
+        const {name, pwd, captcha} = this
+        if (!name) {
+          // 用户名不能为空
+          this.handleShowAlert('用户名不能为空')
+          return false
+        } else if (!pwd) {
+          // 密码不能为空
+          this.handleShowAlert('密码不能为空')
+          return false
+        } else if (!captcha) {
+          // 验证码不能为空
+          this.handleShowAlert('验证码不能为空')
+          return false
+        }
+        result = await reqLoginPwd({name, pwd, captcha})
+        console.log(result)
+      }
+      // 停止计时
+      if (this.leftTime > 0) {
+        this.leftTime = 0
+        clearInterval(this.timer)
+      }
+      // 根据结果,处理数据
+      if (result.code === 0) {
+        const user = result.data
+        // 保存到状态
+        this.saveUserInfo(user)
+        // 去个人中心页面
+        this.$router.replace('/profile')
+      } else {
+        // 显示新的图片验证码
+        this.getCaptcha()
+        // 显示警告提示
+        const msg = result.msg
+        this.handleShowAlert(msg)
+      }
+    },
+    // 显示提示框
+    handleShowAlert (text) {
+      this.alertText = text
+      this.showAlert = true
+    },
+    // 关闭提示框的事件处理函数
+    handleClose () {
+      this.showAlert = false
+      this.alertText = ''
+    },
+    // 获取图形验证码
+    getCaptcha () {
+      // 每次指定的src要不一样
+      // event.target.src = 'http://localhost:4000/captcha?time=' + Date.now()
+      this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+    }
+
+  }
 }
 </script>
 
@@ -126,6 +269,8 @@ export default {
                   color #ccc
                   font-size 14px
                   background transparent
+                  &.correct_phone
+                    color #000 !important
               .login_verification
                 position relative
                 margin-top 16px
@@ -153,8 +298,12 @@ export default {
                       color #ddd
                   &.on
                     background #02a774
+                    >.switch_circle
+                      transform translateX(27px)
+                    .switch_text
+                      float left
+                      color #fff
                   >.switch_circle
-                    //transform translateX(27px)
                     position absolute
                     top -1px
                     left -1px

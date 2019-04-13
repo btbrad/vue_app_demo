@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-07 11:51:41
- * @LastEditTime: 2019-04-07 12:32:57
+ * @LastEditTime: 2019-04-12 15:37:45
  -->
 <template>
     <header class="header">
@@ -21,6 +21,7 @@ export default {
   props: {
     title: String
   }
+
 }
 </script>
 
