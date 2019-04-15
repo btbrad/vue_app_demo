@@ -3,18 +3,19 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-02 10:45:43
- * @LastEditTime: 2019-04-12 22:07:33
+ * @LastEditTime: 2019-04-14 11:50:44
  -->
 <template>
   <section class="msite">
     <!--首页头部-->
     <HeaderTop :title="address.name">
-      <span class="header_search" slot="left">
+      <router-link to="/search" class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
-      </span>
-      <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
-      </span>
+      </router-link>
+      <router-link :to="userInfo._id ? '/userInfo' : '/login'" class="header_login" slot="right">
+        <span v-if="!userInfo._id" class="header_login_text">登录|注册</span>
+        <i v-else class="iconfont icon-person"></i>
+      </router-link>
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav">
@@ -65,7 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['address', 'categories']),
+    ...mapState(['address', 'categories', 'userInfo']),
     categoryArr () {
       const {categories} = this
       let cateArr = []
@@ -77,8 +78,6 @@ export default {
           minArr = []
         }
       })
-      console.log(cateArr)
-
       return cateArr
     }
   },

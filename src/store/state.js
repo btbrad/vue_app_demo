@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:15:45
- * @LastEditTime: 2019-04-13 23:25:50
+ * @LastEditTime: 2019-04-15 00:06:50
  */
 /**
  * 状态对象
@@ -15,5 +15,8 @@ export default {
   address: {}, // 地址信息对象
   categories: [], // 分类数组
   shops: [], // 商家数组
-  userInfo: {} // 用户信息
+  userInfo: {}, // 用户信息
+  goods: [], // 商品列表
+  ratings: [], // 商家评价列表
+  info: {} // 商家信息
 }

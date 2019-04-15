@@ -3,14 +3,14 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-02 10:48:29
- * @LastEditTime: 2019-04-14 00:16:28
+ * @LastEditTime: 2019-04-15 11:53:04
  -->
 <template>
     <div>
       <section class="profile">
         <HeaderTop title="我的"></HeaderTop>
         <section class="profile-number">
-          <router-link to='/login' class="profile-link">
+          <router-link :to="userInfo._id ? '/userInfo' : '/login'" class="profile-link">
             <div class="profile_image">
               <i class="iconfont icon-person"></i>
             </div>
@@ -96,12 +96,17 @@
             </div>
           </a>
         </section>
+        <section v-if="userInfo._id" class="profile_my_order border-1px">
+          <mt-button type="danger" style="width:100%" @click="handleLogout">退出登录</mt-button>
+        </section>
       </section>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import { MessageBox, Toast } from 'mint-ui'
+
 import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
 
 export default {
@@ -111,6 +116,18 @@ export default {
   },
   computed: {
     ...mapState(['userInfo'])
+  },
+  methods: {
+    ...mapActions(['logout']),
+    handleLogout () {
+      MessageBox.confirm('确定退出登录吗?').then(action => {
+        console.log(111)
+        this.logout()
+        Toast('登出成功')
+      }, action => {
+        console.log('取消退出')
+      })
+    }
   }
 }
 </script>

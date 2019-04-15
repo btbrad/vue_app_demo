@@ -3,12 +3,13 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-07 15:18:59
- * @LastEditTime: 2019-04-13 23:50:20
+ * @LastEditTime: 2019-04-14 17:28:12
  -->
 <template>
   <div class="shop_container">
       <ul class="shop_list" v-if="shops.length>0">
-        <li class="shop_li border-1px" v-for="(shop,index) in shops" :key="index">
+        <li class="shop_li border-1px" v-for="(shop,index) in shops" :key="index"
+         @click="$router.push('/shop')">
           <a>
             <div class="shop_left">
               <img class="shop_img" src="./images/shop/4.jpg">

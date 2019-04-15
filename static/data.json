@@ -1,0 +1,25 @@
+{
+  "goods":[
+    {
+      "name":"香浓甜粥",
+      "foods":[
+        {
+          "name":"南瓜粥",
+          "price":10,
+          "rate":"90%"
+        }
+      ]
+    }
+  ],
+  "rating":[
+    {
+      "star":3.6,
+      "comment":"very good",
+
+    }
+  ],
+  "info":{
+
+  }
+
+}

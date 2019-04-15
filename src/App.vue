@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-01 21:11:52
- * @LastEditTime: 2019-04-12 15:24:05
+ * @LastEditTime: 2019-04-14 11:49:44
  -->
 <template>
     <div id="app">
@@ -26,10 +26,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAddress'])
+    ...mapActions(['getAddress', 'getUserInfo'])
   },
   mounted () {
     this.getAddress()
+    this.getUserInfo()
   }
 }
 </script>

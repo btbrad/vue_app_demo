@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-07 17:42:53
- * @LastEditTime: 2019-04-13 18:34:50
+ * @LastEditTime: 2019-04-15 00:01:05
  */
 
 /**
@@ -34,3 +34,13 @@ export const reqLoginSMS = (phone, code) => ajax(`${BASE_URL}/login_sms`, {phone
 export const reqUserInfo = () => ajax(`${BASE_URL}/userinfo`)
 // [10、用户登出](#10用户登出)<br/>
 export const reqLogout = () => ajax(`${BASE_URL}/logout`)
+
+/**
+ * mock数据接口
+ */
+// 获取商家信息
+export const reqShopInfo = () => ajax('/shop_info')
+// 获取商家评价数组
+export const reqShopRatings = () => ajax('/shop_ratings')
+// 获取商品数组
+export const reqShopGoods = () => ajax('/shop_goods')

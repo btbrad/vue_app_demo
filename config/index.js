@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-01 19:39:49
- * @LastEditTime: 2019-04-01 19:41:32
+ * @LastEditTime: 2019-04-07 23:28:18
  */
 'use strict'
 // Template version: 1.3.1
@@ -17,7 +17,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api':{ //匹配所有以'/api'开头的请求路径
+        target: 'http://localhost:4000', //代理目标的基础路径
+        changeOrigin: true, //支持跨域
+        pathRewrite: { //重写路径: 去掉路径开头中的'/api'
+          '^/api': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

@@ -3,20 +3,29 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:15:54
- * @LastEditTime: 2019-04-13 23:30:44
+ * @LastEditTime: 2019-04-15 23:08:42
  */
 
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORIES,
   RECEIVE_SHOPS,
-  RECEIVE_USER_INFO
+  RECEIVE_USER_INFO,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO,
+  RESET_USER_INFO
 } from './mutation-types'
 
 import {
   reqAddress,
   reqFoodCategories,
-  reqShops
+  reqShops,
+  reqUserInfo,
+  reqShopGoods,
+  reqShopInfo,
+  reqShopRatings,
+  reqLogout
 } from '../api/index'
 
 export default {
@@ -32,7 +41,6 @@ export default {
   // 异步获取食品分类列表
   async getCategories ({commit}) {
     let res = await reqFoodCategories()
-    console.log(res)
     if (res.code === 0) {
       const categories = res.data
       commit(RECEIVE_CATEGORIES, {categories})
@@ -41,7 +49,6 @@ export default {
   // 异步获取商家列表
   async getShops ({commit, state}) {
     let res = await reqShops(state.longitude, state.latitude)
-    console.log(res)
     if (res.code === 0) {
       const shops = res.data
       commit(RECEIVE_SHOPS, {shops})
@@ -50,5 +57,46 @@ export default {
   // 保存用户信息
   saveUserInfo ({commit}, userInfo) {
     commit(RECEIVE_USER_INFO, {userInfo})
+  },
+  // 异步获取用户信息
+  async getUserInfo ({commit}) {
+    let result = await reqUserInfo()
+    console.log(result)
+    if (result.code === 0) {
+      commit(RECEIVE_USER_INFO, {userInfo: result.data})
+    }
+  },
+  // 异步获取商品
+  async getShopGoods ({commit}, cb) {
+    let result = await reqShopGoods()
+    console.log(result)
+    if (result.code === 0) {
+      commit(RECEIVE_GOODS, {goods: result.data})
+      cb && cb()
+    }
+  },
+  // 异步获取店铺信息
+  async getShopInfo ({commit}) {
+    let result = await reqShopInfo()
+    console.log(result)
+    if (result.code === 0) {
+      commit(RECEIVE_INFO, {info: result.data})
+    }
+  },
+  // 异步获取店铺评价
+  async getShopRatings ({commit}) {
+    let result = await reqShopRatings()
+    console.log(result)
+    if (result.code === 0) {
+      commit(RECEIVE_RATINGS, {ratings: result.data})
+    }
+  },
+  // 退出登录
+  async logout ({commit}) {
+    let result = await reqLogout()
+    console.log(result)
+    if (result.code === 0) {
+      commit(RESET_USER_INFO)
+    }
   }
 }
