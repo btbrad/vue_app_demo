@@ -3,25 +3,42 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-02 10:48:38
- * @LastEditTime: 2019-04-07 12:32:39
+ * @LastEditTime: 2019-04-17 17:52:22
  -->
 <template>
     <section class="search">
       <HeaderTop title="搜索"></HeaderTop>
-      <form class="search_form" action="#">
-        <input type="search" name="search" placeholder="请输入商家或美食名称" class="search_input">
-        <input type="submit" name="submit" class="search_submit">
+      <form class="search_form" action="#" @submit.prevent="search">
+        <input type="search" name="search" placeholder="请输入商家或美食名称" class="search_input" v-model="keyword">
+        <input type="submit" name="submit">
       </form>
     </section>
 </template>
 
 <script>
 import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
-
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Search',
   components: {
     HeaderTop
+  },
+  data () {
+    return {
+      keyword: ''
+    }
+  },
+  computed: {
+    ...mapState(['searchShop'])
+  },
+  methods: {
+    ...mapActions(['getSearchShops']),
+    search () {
+      const keyword = this.keyword.trim()
+      if (keyword) {
+        this.getSearchShops(keyword)
+      }
+    }
   }
 }
 </script>

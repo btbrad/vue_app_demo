@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:16:27
- * @LastEditTime: 2019-04-16 23:07:54
+ * @LastEditTime: 2019-04-17 17:28:20
  */
 import Vue from 'vue'
 import {
@@ -17,7 +17,8 @@ import {
   RESET_USER_INFO,
   INCREASE_FOOD_COUNT,
   DECREASE_FOOD_COUNT,
-  CLEAR_SHOP_CART
+  CLEAR_SHOP_CART,
+  RECEIVE_SEARCH_SHOPS
 } from './mutation-types'
 
 export default {
@@ -68,5 +69,8 @@ export default {
       food.count = 0
     })
     state.cartFoods = []
+  },
+  [RECEIVE_SEARCH_SHOPS] (state, {searchShops}) {
+    state.searchShops = searchShops
   }
 }

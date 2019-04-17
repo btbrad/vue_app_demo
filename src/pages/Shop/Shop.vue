@@ -3,17 +3,19 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-14 14:41:07
- * @LastEditTime: 2019-04-15 18:56:35
+ * @LastEditTime: 2019-04-17 18:22:43
  -->
 <template>
     <div>
       <ShopHeader></ShopHeader>
       <div class="tab">
-        <router-link class="tab-item" to="/shop/goods">点餐</router-link>
-        <router-link class="tab-item" to="/shop/ratings">评价</router-link>
-        <router-link class="tab-item" to="/shop/info">商家</router-link>
+        <router-link class="tab-item" to="/shop/goods" replace>点餐</router-link>
+        <router-link class="tab-item" to="/shop/ratings" replace>评价</router-link>
+        <router-link class="tab-item" to="/shop/info" replace>商家</router-link>
       </div>
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
 </template>
 

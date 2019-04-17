@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-07 17:42:53
- * @LastEditTime: 2019-04-15 00:01:05
+ * @LastEditTime: 2019-04-17 19:00:20
  */
 
 /**
@@ -12,7 +12,12 @@
 import ajax from './ajax'
 
 // const BASE_URL = 'http://localhost:4000'
+
+// 开发环境用
 const BASE_URL = '/api'
+
+// 生产环境用
+// const BASE_URL = 'http://localhost:4000'
 
 // [1、根据经纬度获取位置详情](#1根据经纬度获取位置详情)<br/>
 export const reqAddress = (geohash) => ajax(`${BASE_URL}/position/${geohash}`)

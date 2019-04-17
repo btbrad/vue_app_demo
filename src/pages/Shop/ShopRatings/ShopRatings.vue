@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-14 14:46:24
- * @LastEditTime: 2019-04-17 15:41:23
+ * @LastEditTime: 2019-04-17 20:20:33
  -->
 <template>
       <div class="ratings" ref="ratings">
@@ -70,7 +70,7 @@
                     <span class="iconfont" :class="item.rateType === 0? 'icon-thumb_up' : 'icon-thumb_down'"></span>
                     <span class="item" v-for="(food,index) in item.recommend" :key="index">{{food}}</span>
                   </div>
-                  <div class="time">{{item.rateTimes | formateTime}}</div>
+                  <div class="time">{{item.rateTime | date-format}}</div>
               </div>
             </li>
           </ul>
@@ -81,7 +81,6 @@
 
 <script>
 import Star from '../../../components/Star/Star.vue'
-import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
 import BScroll from 'better-scroll'
 export default {
@@ -152,12 +151,12 @@ export default {
         })
       })
     })
-  },
-  filters: {
-    formateTime (time) {
-      return moment(time).format('YYYY MM DD hh:mm:ss')
-    }
   }
+  // filters: {
+  //   formateTime (time) {
+  //     return moment(time).format('YYYY MM DD hh:mm:ss')
+  //   }
+  // }
 }
 </script>
 

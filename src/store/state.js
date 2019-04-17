@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:15:45
- * @LastEditTime: 2019-04-16 19:21:34
+ * @LastEditTime: 2019-04-17 17:23:40
  */
 /**
  * 状态对象
@@ -19,5 +19,6 @@ export default {
   goods: [], // 商品列表
   ratings: [], // 商家评价列表
   info: {}, // 商家信息
-  cartFoods: [] // 购物车中食物的列表
+  cartFoods: [], // 购物车中食物的列表
+  searchShop: [] // 搜索得到的商家列表
 }

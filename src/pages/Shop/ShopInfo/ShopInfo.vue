@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-14 14:47:50
- * @LastEditTime: 2019-04-17 17:14:18
+ * @LastEditTime: 2019-04-17 17:42:56
  -->
 <template>
     <div class="shop-info" ref="shopInfo">
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import {mapState, map} from 'vuex'
+import {mapState} from 'vuex'
 import BScroll from 'better-scroll'
 export default {
   name: 'ShopInfo',

@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:38:41
- * @LastEditTime: 2019-04-16 22:50:36
+ * @LastEditTime: 2019-04-17 17:26:20
  */
 /**
  * mutation的type名称常量
@@ -22,3 +22,5 @@ export const INCREASE_FOOD_COUNT = 'increase_food_count' // 增加商品数量
 export const DECREASE_FOOD_COUNT = 'decrease_food_count' // 减少商品数量
 
 export const CLEAR_SHOP_CART = 'clear_shop_cart' // 清空购物车
+
+export const RECEIVE_SEARCH_SHOPS = 'receive_search_shops' // 接收搜索到的商家数组

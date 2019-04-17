@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:15:54
- * @LastEditTime: 2019-04-17 17:02:50
+ * @LastEditTime: 2019-04-17 17:43:07
  */
 
 import {
@@ -17,7 +17,8 @@ import {
   RESET_USER_INFO,
   INCREASE_FOOD_COUNT,
   DECREASE_FOOD_COUNT,
-  CLEAR_SHOP_CART
+  CLEAR_SHOP_CART,
+  RECEIVE_SEARCH_SHOPS
 } from './mutation-types'
 
 import {
@@ -28,7 +29,8 @@ import {
   reqShopGoods,
   reqShopInfo,
   reqShopRatings,
-  reqLogout
+  reqLogout,
+  reqSearchShops
 } from '../api/index'
 
 export default {
@@ -114,5 +116,15 @@ export default {
   // 清空购物车
   clearShopCart ({commit}) {
     commit(CLEAR_SHOP_CART)
+  },
+  // 异步获取搜索商家商品列表
+  async getSearchShops ({commit, state}, keyword) {
+    const geohash = state.latitude + ',' + state.longitude
+    let res = await reqSearchShops(geohash, keyword)
+    console.log(res)
+    if (res.code === 0) {
+      const searchShops = res.data
+      commit(RECEIVE_SEARCH_SHOPS, {searchShops})
+    }
   }
 }

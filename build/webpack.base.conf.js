@@ -1,3 +1,10 @@
+/*
+ * @Author: btbrad
+ * @LastEditors: btbrad
+ * @Description:
+ * @Date: 2019-04-01 19:39:49
+ * @LastEditTime: 2019-04-17 20:39:53
+ */
 'use strict'
 const path = require('path')
 const utils = require('./utils')
@@ -88,5 +95,10 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+  externals: {
+    vue: 'Vue',
+    'vue-router':'VueRouter',
+    'mint-ui':'MINT'
   }
 }

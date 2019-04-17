@@ -3,14 +3,14 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-16 16:31:37
- * @LastEditTime: 2019-04-16 17:35:19
+ * @LastEditTime: 2019-04-17 19:09:50
  -->
 <template>
   <transition name="fade">
     <div class="food" v-if="isShow">
       <div class="food-content">
         <div class="image-header">
-          <img :src="food.image">
+          <img v-lazy="food.image">
           <p class="foodpanel-desc">{{food.info}}</p>
           <div class="back" @click="toggleShow">
             <i class="iconfont icon-arrow_left"></i>
