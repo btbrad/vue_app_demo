@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-14 14:43:29
- * @LastEditTime: 2019-04-16 00:53:52
+ * @LastEditTime: 2019-04-16 19:53:59
  -->
 <template>
     <div>
@@ -25,7 +25,8 @@
             <li class="food-list-hook" v-for="(item,index) in goods" :key="index">
               <h1 class="title">{{item.name}}</h1>
               <ul>
-                <li class="food-item bottom-border-1px" v-for="(food,index) in item.foods" :key="index">
+                <li class="food-item bottom-border-1px" v-for="(food,index) in item.foods" :key="index"
+                  @click="showFood(food)">
                   <div class="icon">
                     <img width="57" height="57" :src="food.icon">
                   </div>
@@ -41,7 +42,7 @@
                       <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                     </div>
                     <div class="cartcontrol-wrapper">
-                      CartControl
+                      <CartControl :food="food"/>
                     </div>
                   </div>
                 </li>
@@ -49,19 +50,30 @@
             </li>
           </ul>
         </div>
+        <ShopCart />
       </div>
+      <Food :food="food" ref="food"/>
     </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 import BScroll from 'better-scroll'
+import CartControl from '../../../components/CartControl/CartControl.vue'
+import Food from '../../../components/Food/Food.vue'
+import ShopCart from '../../../components/ShopCart/ShopCart.vue'
 export default {
   name: 'ShopGoods',
+  components: {
+    CartControl,
+    Food,
+    ShopCart
+  },
   data () {
     return {
       scrollY: 0, // 右侧滑动的Y轴坐标(滑动过程时实施变化)
-      tops: [] // 所有右侧分类li的top组成的数组(列表第一次显示后就不再变化)
+      tops: [], // 所有右侧分类li的top组成的数组(列表第一次显示后就不再变化)
+      food: {} // 需要显示的food
     }
   },
   methods: {
@@ -107,6 +119,10 @@ export default {
       this.scrollY = top
       // 平滑滑动右侧列表
       this.foodsScroll.scrollTo(0, -top, 300)
+    },
+    showFood (food) {
+      this.food = food
+      this.$refs.food.toggleShow()
     }
   },
   mounted () {

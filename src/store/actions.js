@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:15:54
- * @LastEditTime: 2019-04-15 23:08:42
+ * @LastEditTime: 2019-04-16 22:52:03
  */
 
 import {
@@ -14,7 +14,10 @@ import {
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
   RECEIVE_INFO,
-  RESET_USER_INFO
+  RESET_USER_INFO,
+  INCREASE_FOOD_COUNT,
+  DECREASE_FOOD_COUNT,
+  CLEAR_SHOP_CART
 } from './mutation-types'
 
 import {
@@ -98,5 +101,18 @@ export default {
     if (result.code === 0) {
       commit(RESET_USER_INFO)
     }
+  },
+  // 更新food数量
+  updateFoodCount ({commit}, {food, isAdd}) {
+    console.log(food, isAdd)
+    if (isAdd) {
+      commit(INCREASE_FOOD_COUNT, {food})
+    } else {
+      commit(DECREASE_FOOD_COUNT, {food})
+    }
+  },
+  // 清空购物车
+  clearShopCart ({commit}) {
+    commit(CLEAR_SHOP_CART)
   }
 }

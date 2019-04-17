@@ -3,13 +3,13 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-14 14:50:27
- * @LastEditTime: 2019-04-15 18:56:02
+ * @LastEditTime: 2019-04-16 17:24:43
  -->
 <template>
     <div>
       <div class="shop-header">
         <nav class="shop-nav" :style="{backgroundImage:`url(${info.bgImg})`}">
-          <a class="back" @click="$router.back">
+          <a class="back" @click="$router.back()">
             <i class="iconfont icon-arrow_left"></i>
           </a>
         </nav>
@@ -137,6 +137,7 @@ export default {
   },
   mounted () {
     this.getShopInfo()
+    console.log(this.$router)
   }
 }
 </script>

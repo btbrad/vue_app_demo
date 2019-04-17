@@ -3,9 +3,9 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:16:27
- * @LastEditTime: 2019-04-15 11:30:44
+ * @LastEditTime: 2019-04-16 23:07:54
  */
-
+import Vue from 'vue'
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORIES,
@@ -14,7 +14,10 @@ import {
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
   RECEIVE_INFO,
-  RESET_USER_INFO
+  RESET_USER_INFO,
+  INCREASE_FOOD_COUNT,
+  DECREASE_FOOD_COUNT,
+  CLEAR_SHOP_CART
 } from './mutation-types'
 
 export default {
@@ -41,5 +44,29 @@ export default {
   },
   [RESET_USER_INFO] (state) {
     state.userInfo = ''
+  },
+  [INCREASE_FOOD_COUNT] (state, {food}) {
+    if (!food.count) {
+      // food.count = 1
+      Vue.set(food, 'count', 1) // 让新增的属性也有数据绑定
+      state.cartFoods.push(food)
+    } else {
+      food.count++
+    }
+    console.log(food)
+  },
+  [DECREASE_FOOD_COUNT] (state, {food}) {
+    if (food.count) {
+      food.count--
+    }
+    if (food.count === 0) {
+      state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+    }
+  },
+  [CLEAR_SHOP_CART] (state) {
+    state.cartFoods.forEach((food) => {
+      food.count = 0
+    })
+    state.cartFoods = []
   }
 }
