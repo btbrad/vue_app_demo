@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-08 00:15:54
- * @LastEditTime: 2019-04-16 22:52:03
+ * @LastEditTime: 2019-04-17 17:02:50
  */
 
 import {
@@ -81,17 +81,17 @@ export default {
   // 异步获取店铺信息
   async getShopInfo ({commit}) {
     let result = await reqShopInfo()
-    console.log(result)
     if (result.code === 0) {
       commit(RECEIVE_INFO, {info: result.data})
     }
   },
   // 异步获取店铺评价
-  async getShopRatings ({commit}) {
+  async getShopRatings ({commit}, cb) {
     let result = await reqShopRatings()
     console.log(result)
     if (result.code === 0) {
       commit(RECEIVE_RATINGS, {ratings: result.data})
+      cb && cb()
     }
   },
   // 退出登录

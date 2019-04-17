@@ -3,7 +3,7 @@
  * @LastEditors: btbrad
  * @Description:
  * @Date: 2019-04-14 14:46:24
- * @LastEditTime: 2019-04-17 10:45:07
+ * @LastEditTime: 2019-04-17 15:41:23
  -->
 <template>
       <div class="ratings" ref="ratings">
@@ -34,63 +34,43 @@
           <div class="split"></div>
           <div class="ratingselect">
             <div class="rating-type border-1px">
-              <span class="block positive active">
+              <span class="block positive" :class="{active:selectType === 2}" @click="setSelectType(2)">
                 全部
                 <span class="count">{{ratings.length}}</span>
               </span>
-              <span class="block positive">
+              <span class="block positive" :class="{active:selectType === 0}" @click="setSelectType(0)">
                 满意
-                <span class="count">28</span>
+                <span class="count">{{positiveCount}}</span>
               </span>
-              <span class="block negative">
+              <span class="block negative" :class="{active:selectType === 1}" @click="setSelectType(1)">
                 不满意
-                <span class="count">2</span>
+                <span class="count">{{negativeCount}}</span>
               </span>
             </div>
-            <div class="switch on">
+            <div class="switch" :class="{on:isContent}" @click="toggleContent">
               <span class="iconfont icon-check_circle"></span>
               <span class="text">只看有内容的评价</span>
             </div>
           </div>
           <div class="rating-wrapper">
           <ul>
-            <li class="rating-item">
+            <li class="rating-item" v-for="(item,index) in currentRatings" :key="index">
               <div class="avatar">
                 <img width="28" height="28"
-                  src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png">
+                  :src="item.avatar">
               </div>
               <div class="content">
-                <h1 class="name">aa</h1>
+                <h1 class="name">{{item.username}}</h1>
                   <div class="star-wrapper">
-                    <Star :score="5" :size="24" />
-                    <span class="delivery">30</span>
+                    <Star :score="item.score" :size="24" />
+                    <span class="delivery">{{item.deliveryTime}}</span>
                   </div>
-                  <p class="text">不错</p>
+                  <p class="text">{{item.text}}</p>
                   <div class="recommend">
-                    <span class="iconfont icon-thumb_up"></span>
-                    <span class="item">南瓜粥</span>
-                    <span class="item">皮蛋瘦肉粥</span>
-                    <span class="item">扁豆焖面</span>
+                    <span class="iconfont" :class="item.rateType === 0? 'icon-thumb_up' : 'icon-thumb_down'"></span>
+                    <span class="item" v-for="(food,index) in item.recommend" :key="index">{{food}}</span>
                   </div>
-                  <div class="time">2016-07-23 21:52:44</div>
-              </div>
-            </li>
-            <li class="rating-item">
-              <div class="avatar">
-                <img width="28" height="28"
-                  src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png">
-              </div>
-              <div class="content">
-                <h1 class="name">aa</h1>
-                <div class="star-wrapper">
-                  <Star :score="4" :size="24" />
-                  <span class="delivery">30</span>
-                </div>
-                <p class="text">不错</p>
-                <div class="recommend">
-                  <span class="iconfont icon-thumb_down"></span>
-                </div>
-                <div class="time">2016-07-23 21:52:44</div>
+                  <div class="time">{{item.rateTimes | formateTime}}</div>
               </div>
             </li>
           </ul>
@@ -101,20 +81,82 @@
 
 <script>
 import Star from '../../../components/Star/Star.vue'
+import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
+import BScroll from 'better-scroll'
 export default {
   name: 'ShopRatings',
+  data () {
+    return {
+      isContent: true, // 是否只显示有文本的
+      selectType: 2 // 选择的评价类型: 0 满意, 1 不满意, 2全部
+    }
+  },
   components: {
     Star
   },
   computed: {
-    ...mapState(['info', 'ratings'])
+    ...mapState(['info', 'ratings']),
+    // 满意数量
+    positiveCount () {
+      return this.ratings.filter((item, index) => {
+        return item.rateType === 0
+      }).length
+    },
+    // 不满意数量
+    negativeCount () {
+      return this.ratings.filter((item, index) => {
+        return item.rateType === 1
+      }).length
+    },
+    // 过滤后的ratings
+    currentRatings () {
+      let result
+      // if (this.selectType === 0) {
+      //   result = this.ratings.filter((item, index) => {
+      //     return item.rateType === 0
+      //   })
+      // } else if (this.selectType === 1) {
+      //   result = this.ratings.filter((item, index) => {
+      //     return item.rateType === 1
+      //   })
+      // } else {
+      //   result = this.ratings
+      // }
+
+      // if (this.isContent) {
+      //   result = result.filter((item, index) => {
+      //     return item.text.length > 0
+      //   })
+      // }
+      result = this.ratings.filter((item, index) => {
+        return (this.selectType === 2 || item.rateType === this.selectType) && (!this.isContent || item.text.length > 0)
+      })
+      return result
+    }
   },
   methods: {
-    ...mapActions(['getShopRatings'])
+    ...mapActions(['getShopRatings']),
+    setSelectType (type) {
+      this.selectType = type
+    },
+    toggleContent () {
+      this.isContent = !this.isContent
+    }
   },
   mounted () {
-    this.getShopRatings()
+    this.getShopRatings(() => {
+      this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.ratings, {
+          click: true
+        })
+      })
+    })
+  },
+  filters: {
+    formateTime (time) {
+      return moment(time).format('YYYY MM DD hh:mm:ss')
+    }
   }
 }
 </script>
